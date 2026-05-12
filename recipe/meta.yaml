@@ -11,7 +11,7 @@ source:
     - 0001-Increase-tolerance-on-yet-another-test-to-make-tests.patch
 
 build:
-  number: 0
+  number: 1
 
   # openmpi oversubscribe env
   script_env:
