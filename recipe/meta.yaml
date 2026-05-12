@@ -1,4 +1,4 @@
-{% set version = "1.1.2" %}
+{% set version = "1.2.0" %}
 
 package:
   name: "io4dolfinx"
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/scientificcomputing/io4dolfinx/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 592954e9ef4942fef966cba49b131213ff105fa473dd26912c1d2a22fb2392d3
+  sha256: 2da5fb02998cef9203c2da75a6280231ff66bc044557e6816148e968fcbf53b7
   patches:
     - 0001-Increase-tolerance-on-yet-another-test-to-make-tests.patch
 
@@ -21,7 +21,7 @@ build:
     - HYDRA_IFACE=lo   # [linux] Force MPICH to use the local loopback network interface
     - FI_PROVIDER=tcp  # Force MPI to use standard TCP instead of looking for HPC interconnects
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  
+
 
 requirements:
   host:
@@ -37,7 +37,6 @@ requirements:
     - adios2  >=2.10.2 mpi_*  # [not win]
     - h5py * mpi_*  # [not win]
     - h5py  # [win]
-  
 test:
   source_files:
     - pyproject.toml
