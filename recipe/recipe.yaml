@@ -62,11 +62,11 @@ tests:
       env:
         MPIEXEC_TIMEOUT: "1200"
         HDF5_USE_FILE_LOCKING: "FALSE"
-        if: win
-        then:
-          VSCMD_SKIP_SENDTELEMETRY: "1"
-          FFCX_CACHE_DIR: "%TEMP%\\ffcx_cache"
       content:
+        - if: win
+          then:
+            - set VSCMD_SKIP_SENDTELEMETRY=1
+            - set FFCX_CACHE_DIR=%TEMP%\ffcx_cache
         - pytest --log-cli-level=debug -vvs --maxfail 4 tests
         - if: unix
           then:
