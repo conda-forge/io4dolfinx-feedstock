@@ -63,20 +63,14 @@ tests:
         MPIEXEC_TIMEOUT: "1200"
         HDF5_USE_FILE_LOCKING: "FALSE"
       content:
-        - if: win
-          then:
-            # 1. Disable MSVC telemetry to prevent vctip.exe from spawning
-            - set VSCMD_SKIP_SENDTELEMETRY=1
-            # 2. Force MSVC to embed debug info instead of spawning the mspdbsrv.exe daemon
-            - set CFLAGS=/Z7
-            - set CXXFLAGS=/Z7
-            # 3. Force FEniCS cache out of the test environment (evaluated properly by cmd)
-            - set XDG_CACHE_HOME=%TEMP%\fenics_cache
-            - set LOCALAPPDATA=%TEMP%\localappdata
         - pytest --log-cli-level=debug -vvs --maxfail 4 tests
         - if: unix
           then:
             - mpiexec -n 2 pytest --log-cli-level=debug -vvs --maxfail 4 tests
+        - if: win
+          then:
+            # Gracefully shut down the background MSVC Program Database Server
+            - mspdbsrv.exe -stop
 
 about:
   summary: Input/Output for dolfinx
