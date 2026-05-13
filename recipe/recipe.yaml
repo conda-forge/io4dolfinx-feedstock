@@ -65,8 +65,14 @@ tests:
       content:
         - if: win
           then:
+            # 1. Disable MSVC telemetry to prevent vctip.exe from spawning
             - set VSCMD_SKIP_SENDTELEMETRY=1
-            - set FFCX_CACHE_DIR=%TEMP%\ffcx_cache
+            # 2. Force MSVC to embed debug info instead of spawning the mspdbsrv.exe daemon
+            - set CFLAGS=/Z7
+            - set CXXFLAGS=/Z7
+            # 3. Force FEniCS cache out of the test environment (evaluated properly by cmd)
+            - set XDG_CACHE_HOME=%TEMP%\fenics_cache
+            - set LOCALAPPDATA=%TEMP%\localappdata
         - pytest --log-cli-level=debug -vvs --maxfail 4 tests
         - if: unix
           then:
