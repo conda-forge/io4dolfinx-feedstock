@@ -12,6 +12,7 @@ source:
   sha256: 2da5fb02998cef9203c2da75a6280231ff66bc044557e6816148e968fcbf53b7
   patches:
     - 0001-Increase-tolerance-on-yet-another-test-to-make-tests.patch
+    - 0001-Skip-tests-using-ipyparallel-on-windows-due-to-issue.patch
 
 build:
   number: 2
