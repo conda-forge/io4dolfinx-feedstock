@@ -29,14 +29,15 @@ requirements:
     - packaging
     - fenics-dolfinx >=0.10.0
     - pyvista
-    - h5py * mpi_*
     - if: unix
       then:
         - __unix
         - adios2 >=2.10.2 mpi_*
+        - h5py * mpi_*
     - if: win
       then:
         - __win
+        - h5py
 
 tests:
   - python:
