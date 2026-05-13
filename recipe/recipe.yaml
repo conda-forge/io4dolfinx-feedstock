@@ -37,7 +37,6 @@ requirements:
     - if: win
       then:
         - __win
-        - adios2 >=2.10.2
         - h5py
 
 tests:
