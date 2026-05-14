@@ -65,14 +65,11 @@ tests:
       content:
         - if: win
           then:
-            # 1. Force all FEniCS/FFCx JIT compilations outside the test workspace
+            # Force all FEniCS/FFCx JIT compilations outside the test workspace
             - set "FFCX_CACHE_DIR=%TEMP%\ffcx"
             - set "XDG_CACHE_HOME=%TEMP%\xdg"
-            # 2. Force Matplotlib to build its font cache outside the workspace
+            # Force Matplotlib to build its font cache outside the workspace
             - set "MPLCONFIGDIR=%TEMP%\mpl"
-            # 3. Force pytest's tmp_path fixture (which writes .h5 and .bp files) outside
-            - set "TMP=%TEMP%\pytest_tmp"
-            - set "TEMP=%TEMP%\pytest_tmp"
             
         - pytest --log-cli-level=debug -vvs --maxfail 4 tests
         
