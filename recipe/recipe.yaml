@@ -63,19 +63,22 @@ tests:
         MPIEXEC_TIMEOUT: "1200"
         HDF5_USE_FILE_LOCKING: "FALSE"
       content:
-        - if: unix
-          then:
-            - pytest --log-cli-level=debug -vvs --maxfail 4 tests
-            - mpiexec -n 2 pytest --log-cli-level=debug -vvs --maxfail 4 tests
         - if: win
           then:
-            # Save the path to the test workspace
-            - set "TEST_WORKSPACE=%CD%"
-            # Change the Current Working Directory to the global Windows Temp folder.
-            #    (The /d flag allows cmd to switch from the D: drive to C:)
-            - cd /d %TEMP%
-            # Run pytest by pointing it back to the tests folder in the workspace.
-            - pytest --log-cli-level=debug -vvs --maxfail 4 "%TEST_WORKSPACE%\tests"
+            # 1. Force all FEniCS/FFCx JIT compilations outside the test workspace
+            - set "FFCX_CACHE_DIR=%TEMP%\ffcx"
+            - set "XDG_CACHE_HOME=%TEMP%\xdg"
+            # 2. Force Matplotlib to build its font cache outside the workspace
+            - set "MPLCONFIGDIR=%TEMP%\mpl"
+            # 3. Force pytest's tmp_path fixture (which writes .h5 and .bp files) outside
+            - set "TMP=%TEMP%\pytest_tmp"
+            - set "TEMP=%TEMP%\pytest_tmp"
+            
+        - pytest --log-cli-level=debug -vvs --maxfail 4 tests
+        
+        - if: unix
+          then:
+            - mpiexec -n 2 pytest --log-cli-level=debug -vvs --maxfail 4 tests
         
 
 about:
