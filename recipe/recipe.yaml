@@ -63,19 +63,23 @@ tests:
         MPIEXEC_TIMEOUT: "1200"
         HDF5_USE_FILE_LOCKING: "FALSE"
       content:
-        - if: win
-          then:
-            # Force all FEniCS/FFCx JIT compilations outside the test workspace
-            - set "FFCX_CACHE_DIR=%TEMP%\ffcx"
-            - set "XDG_CACHE_HOME=%TEMP%\xdg"
-            # Force Matplotlib to build its font cache outside the workspace
-            - set "MPLCONFIGDIR=%TEMP%\mpl"
-            
-        - pytest --log-cli-level=debug -vvs --maxfail 4 tests
-        
         - if: unix
           then:
+            - pytest --log-cli-level=debug -vvs --maxfail 4 tests
             - mpiexec -n 2 pytest --log-cli-level=debug -vvs --maxfail 4 tests
+        - if: win
+          then:
+            # 1. Create a unique folder in the global Windows Temp directory
+            - set "TEST_DIR=%TEMP%\io4_tests_%RANDOM%"
+            - mkdir "%TEST_DIR%"
+            
+            # 2. Copy the test suite and config so pytest adopts the Temp folder as its root
+            - xcopy /E /I /Y tests "%TEST_DIR%\tests" > nul
+            - copy pyproject.toml "%TEST_DIR%\" > nul
+            
+            # 3. Change drive/directory and run the tests in isolation
+            - cd /d "%TEST_DIR%"
+            - pytest --log-cli-level=debug -vvs --maxfail 4 tests
         
 
 about:
