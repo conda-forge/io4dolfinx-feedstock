@@ -63,17 +63,19 @@ tests:
         MPIEXEC_TIMEOUT: "1200"
         HDF5_USE_FILE_LOCKING: "FALSE"
       content:
-        - pytest --log-cli-level=debug -vvs --maxfail 4 tests
-        - if: win
-          then:
-            # Force-kill MSVC daemons and Intel MPI proxies that lock the test workspace.
-            - taskkill /f /im mspdbsrv.exe || cmd /c exit /b 0
-            - taskkill /f /im vctip.exe || cmd /c exit /b 0
-            - taskkill /f /im hydra_bstrap_proxy.exe || cmd /c exit /b 0
-            - taskkill /f /im smpd.exe || cmd /c exit /b 0
         - if: unix
           then:
+            - pytest --log-cli-level=debug -vvs --maxfail 4 tests
             - mpiexec -n 2 pytest --log-cli-level=debug -vvs --maxfail 4 tests
+        - if: win
+          then:
+            # Save the path to the test workspace
+            - set "TEST_WORKSPACE=%CD%"
+            # Change the Current Working Directory to the global Windows Temp folder.
+            #    (The /d flag allows cmd to switch from the D: drive to C:)
+            - cd /d %TEMP%
+            # Run pytest by pointing it back to the tests folder in the workspace.
+            - pytest --log-cli-level=debug -vvs --maxfail 4 "%TEST_WORKSPACE%\tests"
         
 
 about:
