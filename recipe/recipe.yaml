@@ -80,6 +80,9 @@ tests:
             # 3. Change drive/directory and run the tests in isolation
             - cd /d "%TEST_DIR%"
             - pytest --log-cli-level=debug -vvs --maxfail 4 tests
+            
+            # 4. Safely kill the detached MSVC daemons to release inherited log file handles
+            - python -c "import os; os.system('taskkill /f /im mspdbsrv.exe >nul 2>&1'); os.system('taskkill /f /im vctip.exe >nul 2>&1')"
         
 
 about:
