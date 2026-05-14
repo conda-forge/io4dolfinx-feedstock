@@ -63,15 +63,14 @@ tests:
         MPIEXEC_TIMEOUT: "1200"
         HDF5_USE_FILE_LOCKING: "FALSE"
       content:
+        - pytest --log-cli-level=debug -vvs --maxfail 4 tests
         - if: win
           then:
-            # Force JIT caches and Matplotlib caches into the global TEMP dir
-            # This prevents Windows Defender from locking the test workspace!
-            - set FFCX_CACHE_DIR=%TEMP%\ffcx_cache
-            - set MPLCONFIGDIR=%TEMP%\mpl_cache
-            - set XDG_CACHE_HOME=%TEMP%\xdg_cache
-
-        - pytest --log-cli-level=debug -vvs --maxfail 4 tests
+            # Force-kill MSVC daemons and Intel MPI proxies that lock the test workspace.
+            - taskkill /f /im mspdbsrv.exe || cmd /c exit /b 0
+            - taskkill /f /im vctip.exe || cmd /c exit /b 0
+            - taskkill /f /im hydra_bstrap_proxy.exe || cmd /c exit /b 0
+            - taskkill /f /im smpd.exe || cmd /c exit /b 0
         - if: unix
           then:
             - mpiexec -n 2 pytest --log-cli-level=debug -vvs --maxfail 4 tests
