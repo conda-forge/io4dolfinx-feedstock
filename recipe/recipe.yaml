@@ -1,0 +1,82 @@
+schema_version: 1
+
+context:
+  version: "1.2.0"
+
+package:
+  name: io4dolfinx
+  version: ${{ version }}
+
+source:
+  url: https://github.com/scientificcomputing/io4dolfinx/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: 2da5fb02998cef9203c2da75a6280231ff66bc044557e6816148e968fcbf53b7
+  patches:
+    - 0001-Increase-tolerance-on-yet-another-test-to-make-tests.patch
+
+build:
+  number: 2
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  host:
+    - python ${{ python_min }}.*
+    - pip
+    - setuptools
+  run:
+    - python >=${{ python_min }}
+    - numpy
+    - packaging
+    - fenics-dolfinx >=0.10.0
+    - pyvista
+    - if: unix
+      then:
+        - __unix
+        - adios2 >=2.10.2 mpi_*
+        - h5py * mpi_*
+    - if: win
+      then:
+        - __win
+        - h5py
+
+tests:
+  - python:
+      imports:
+        - io4dolfinx
+      pip_check: true
+      python_version: ${{ python_min }}
+  - files:
+      source:
+        - pyproject.toml
+        - tests
+    requirements:
+      run:
+        - python ${{ python_min }}.*
+        - pip
+        - ipyparallel
+        - if: unix
+          then:
+            - mpich
+        - pytest
+    script:
+      env:
+        MPIEXEC_TIMEOUT: "1200"
+        HDF5_USE_FILE_LOCKING: "FALSE"
+      content:
+        - if: unix
+          then:
+            - pytest --log-cli-level=debug -vvs --maxfail 4 tests
+            - mpiexec -n 2 pytest --log-cli-level=debug -vvs --maxfail 4 tests
+
+about:
+  summary: Input/Output for dolfinx
+  license: MIT
+  license_file: LICENSE
+  homepage: https://github.com/scientificcomputing/io4dolfinx
+  repository: https://github.com/scientificcomputing/io4dolfinx
+  documentation: https://scientificcomputing.github.io/io4dolfinx/
+
+extra:
+  recipe-maintainers:
+    - finsberg
+    - jorgensd
