@@ -10,8 +10,6 @@ package:
 source:
   url: https://github.com/scientificcomputing/io4dolfinx/archive/refs/tags/v${{ version }}.tar.gz
   sha256: aa9d78c7b56eaf758104576200bd600e985dedbeb37f4fbf30f09ac5481e9c83
-  patches:
-    - 0001-Increase-tolerance-on-yet-another-test-to-make-tests.patch
 
 build:
   number: 0
