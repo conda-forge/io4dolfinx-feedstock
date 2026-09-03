@@ -2,6 +2,7 @@ schema_version: 1
 
 context:
   version: "1.4.0"
+  python_min: "3.12"
 
 package:
   name: io4dolfinx
@@ -42,7 +43,9 @@ tests:
       imports:
         - io4dolfinx
       pip_check: true
-      python_version: ${{ python_min }}
+      python_version: 
+        - ${{ python_min }}
+        - "*"
   - files:
       source:
         - pyproject.toml
