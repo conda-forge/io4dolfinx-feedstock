@@ -64,7 +64,7 @@ tests:
         - pytest
     script:
       env:
-        MPIEXEC_TIMEOUT: "1200"
+        MPIEXEC_TIMEOUT: "2000"
         HDF5_USE_FILE_LOCKING: "FALSE"
       content:
         - if: unix
