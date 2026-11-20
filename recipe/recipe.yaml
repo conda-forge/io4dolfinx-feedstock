@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "1.5.1"
+  version: "2.0.0"
   python_min: "3.12"
 
 package:
@@ -10,7 +10,10 @@ package:
 
 source:
   url: https://github.com/scientificcomputing/io4dolfinx/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: ecdeebc9e1548982d81351f5314d589e470bab04ad39de1c257b72e555790cdd
+  sha256: 3c9a061b4cf7b27be5af63e24cec7beaaf2a1aa14dd2120473ce030bd717e4ac
+  patches:
+    - 0001-Add-option-to-skip-tests-for-conversion-if-legacy_di.patch
+    - patitioner.patch
 
 build:
   number: 0
@@ -62,7 +65,7 @@ tests:
         - pytest
     script:
       env:
-        MPIEXEC_TIMEOUT: "1200"
+        MPIEXEC_TIMEOUT: "5000"
         HDF5_USE_FILE_LOCKING: "FALSE"
       content:
         - if: unix
