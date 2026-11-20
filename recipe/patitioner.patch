@@ -1,8 +1,8 @@
 diff --git a/tests/conftest.py b/tests/conftest.py
-index dea495e..49930f1 100644
+index 2c5a39a..3bac371 100644
 --- a/tests/conftest.py
 +++ b/tests/conftest.py
-@@ -63,6 +63,32 @@ def shared_tmp_path(tmp_path):
+@@ -61,6 +61,34 @@ def shared_tmp_path(tmp_path):
      return tmp_path
 
 
@@ -20,14 +20,16 @@ index dea495e..49930f1 100644
 +        pytest.skip("Needs DOLFINx with PT-SCOTCH")
 +    scotch = dolfinx.graph.partitioner_scotch()
 +    if hasattr(dolfinx.mesh, "create_cell_partitioner"):
-+        # DOLFINx 0.10 and 0.11: the ghost mode is part of the cell partitioner, whose
-+        # overload with a graph partitioner fixes max_facet_to_cell_links at 2
++        # DOLFINx 0.10 and 0.11: the ghost mode is part of the cell partitioner
 +        create = dolfinx.mesh.create_cell_partitioner
-+        monkeypatch.setattr(
-+            dolfinx.mesh,
-+            "create_cell_partitioner",
-+            lambda ghost_mode, max_facet_to_cell_links=2: create(scotch, ghost_mode),
-+        )
++
++        def cell_partitioner(ghost_mode, max_facet_to_cell_links=2):
++            if fenicsx_compat.before("0.11.0.dev0"):
++                # The overload with a graph partitioner fixes the links at 2
++                return create(scotch, ghost_mode)
++            return create(scotch, ghost_mode, max_facet_to_cell_links)
++
++        monkeypatch.setattr(dolfinx.mesh, "create_cell_partitioner", cell_partitioner)
 +    else:
 +        monkeypatch.setattr(dolfinx.graph, "partitioner", lambda: scotch)
 +
