@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "1.5.1"
+  version: "2.1.0"
   python_min: "3.12"
 
 package:
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/scientificcomputing/io4dolfinx/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: ecdeebc9e1548982d81351f5314d589e470bab04ad39de1c257b72e555790cdd
+  sha256: 99c463bbd524502c32661dc786f425fe8ee3168ae15b11e10063baec3b175718
 
 build:
   number: 0
