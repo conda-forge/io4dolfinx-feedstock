@@ -13,6 +13,7 @@ source:
   sha256: 3c9a061b4cf7b27be5af63e24cec7beaaf2a1aa14dd2120473ce030bd717e4ac
   patches:
     - 0001-Add-option-to-skip-tests-for-conversion-if-legacy_di.patch
+    - patitioner.patch
 
 build:
   number: 0
