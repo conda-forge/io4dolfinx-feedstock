@@ -27,7 +27,7 @@ requirements:
     - numpy
     - packaging
     - fenics-dolfinx >=0.10.0
-    - fenicsx-compat >=0.3.0
+    - fenicsx-compat >=0.7.0
     - pyvista
     - if: unix
       then:
