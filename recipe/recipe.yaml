@@ -11,9 +11,6 @@ package:
 source:
   url: https://github.com/scientificcomputing/io4dolfinx/archive/refs/tags/v${{ version }}.tar.gz
   sha256: 1ab3119fa52863e66e830458689fb4d6bd7984452dac1fedef67193e36a00249
-  patches:
-    - 0001-Add-option-to-skip-tests-for-conversion-if-legacy_di.patch
-    - patitioner.patch
 
 build:
   number: 0
